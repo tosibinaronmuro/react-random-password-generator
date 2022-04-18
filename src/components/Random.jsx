@@ -1,10 +1,15 @@
 import React, { useState } from "react";
-import RandomFunction from "./pages/RandomFunction";
+ 
+// import useLocalStorage from 'react-localstorage-hook'
 
 function Random() {
+  var newChar = "0123456789";
+  let hello = [];
+  // const [values, setValue] = useLocalStorage(key, initialValue)
   const [randomm, setRandom] = useState([1234]);
   const [copied, setopied] = useState(true);
   const [number, setnumber] = useState(4);
+  const [characters, setcharacters] = useState(newChar);
 
   // copy to clip board
   const copyToClipboard = () => {
@@ -13,14 +18,11 @@ function Random() {
     setopied(false);
   };
 
+  // getting selected characters
 
-  // generating the random password
-  let hello = [];
-  const gene = (num) => {
-    for (var i = 0; i < num; i++) {
-      hello.push(Math.floor(Math.random() * 10));
-       
-    }
+  const setCharacters = (e) => {
+    newChar = e.target.value;
+    setcharacters(newChar);
   };
 
   // getting number from select input
@@ -31,21 +33,126 @@ function Random() {
 
   // password generating onclick event
   const displayRandom = (e) => {
-    const gene = (num) => {
-      for (var i = 0; i < num; i++) {
-        hello.push(Math.floor(Math.random() * 10));
-        
-      }
-    };
-    gene(number);
-    setRandom(hello);
+ 
+
     setopied(true);
+
+    if (characters === "0-9") {
+      const gene = (num) => {
+        for (var i = 0; i < num; i++) {
+          hello.push(Math.floor(Math.random() * 10));
+        }
+      };
+      gene(number);
+    } 
+    
+    else if (characters === "a-z") {
+      hello.push(randd(number, "abcdefghijklmnopqrstuvwxyz"));
+    }
+    
+    else if (characters === "a-z and 0-9") {
+      hello.push(randd(number, "abcdefghijklmnopqrstuvwxyz0123456789"));
+    }
+    else if (characters === "include special characters") {
+      hello.push(randd(number, "abcdefghijklmnopqrstuvwxyz0123456789,./';<>?!@#$%^&*()_+-="));
+       
+    }
+
+    setRandom(hello);
   };
+
+  function randd(len, arr) {
+    var ans = "";
+    for (var i = len; i > 0; i--) {
+      ans += arr[Math.floor(Math.random() * arr.length)];
+    }
+    return ans;
+  }
+  
 
   return (
     <div>
-      {/* select input */}
+      
       <div>
+        {characters === "0123456789" && (
+          <div className="flex justify-center items-center m-2 bg-red-200 rounded text-sm font-extralight p-2 ">
+            <p>select a password range of characters</p>
+          </div>
+        )}
+        <fieldset onChange={setCharacters}>
+          <div>
+            <div className="flex items-center mb-4">
+              <input
+                id="option-1"
+                type="radio"
+                name="countries"
+                value="0-9"
+                className="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-600 dark:focus:bg-blue-600 dark:bg-gray-700 dark:border-gray-600"
+                aria-labelledby="option-1"
+                aria-describedby="option-1"
+              ></input>
+              <label
+                htmlFor="option-1"
+                className="block ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                0-9
+              </label>
+            </div>
+
+            <div className="flex items-center mb-4">
+              <input
+                id="option-2"
+                type="radio"
+                name="countries"
+                value="a-z"
+                className="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-600 dark:focus:bg-blue-600 dark:bg-gray-700 dark:border-gray-600"
+                aria-labelledby="option-2"
+                aria-describedby="option-2"
+              ></input>
+              <label
+                htmlFor="option-2"
+                className="block ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                a-z
+              </label>
+            </div>
+
+            <div className="flex items-center mb-4">
+              <input
+                id="option-3"
+                type="radio"
+                name="countries"
+                value="a-z and 0-9"
+                className="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-600 dark:focus:bg-blue-600 dark:bg-gray-700 dark:border-gray-600"
+                aria-labelledby="option-3"
+                aria-describedby="option-3"
+              ></input>
+              <label
+                htmlFor="option-3"
+                className="block ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                a-z and 0-9
+              </label>
+            </div>
+
+            <div className="flex items-center mb-4">
+              <input
+                id="option-4"
+                type="radio"
+                name="countries"
+                value="include special characters"
+                className="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-600 dark:focus:bg-blue-600 dark:bg-gray-700 dark:border-gray-600"
+                aria-labelledby="option-4"
+                aria-describedby="option-4"
+              ></input>
+              <label
+                htmlFor="option-4"
+                className="block ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >include special characters
+              </label>
+            </div>
+          </div>
+        </fieldset>
         <fieldset onChange={setNumber}>
           <label
             htmlFor="number"
@@ -71,12 +178,11 @@ function Random() {
       </div>
       {/* end of select input */}
 
-
       <h1 className="my-5">
         <p>your password is</p>
       </h1>
 
-{/* password display */}
+      {/* password display */}
       <div className="px-4 flex relative  py-2 m-4 text-sm text-gray-700 bg-gray-100 rounded-lg dark:bg-gray-700 dark:text-gray-300">
         {randomm}
 
@@ -97,11 +203,11 @@ function Random() {
         </div>
       )}
 
-{/* button */}
+      {/* button */}
       <button
         onClick={displayRandom}
         type="button"
-        className="text-white flex justify-center items-center bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+        className="text-white flex justify-center m-auto items-center bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center   mb-2"
       >
         click to generate password
       </button>
